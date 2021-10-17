@@ -2,7 +2,7 @@ import {React, Component} from "react";
 
 import AppHeader from "../app-header";
 import SearchPanel from "../search-panel";
-import PostStatusFiler from "../post-status-filter";
+import PostStatusFilter from "../post-status-filter";
 import PostList from "../post-list";
 import PostAddForm from "../post-add-form";
 
@@ -21,14 +21,46 @@ export default class App extends Component{
         super(props)
         this.state = {
             data: [
-                {label: 'test', important: true, id: 'eq', like: true},
-                {label: 'test1', id: 'dcs'},
-                {label: 'test2',id: 'drerde'}
-            ]
+                {label: 'test', important: true, id: 1, like: true},
+                {label: 'test1', important: false, id: 2, like: false},
+                {label: 'test2', important: false, id: 3, like: false}
+            ],
+            term: '',
+            filter: 'all'
         }   
+        this.maxId = 4
     }
    
-    deleteItem = (id) =>{
+
+    toggleImportant = (id) => {
+        this.setState(({data}) => {
+            const index = data.findIndex(element => element.id === id),
+                  old = data[index],
+                  newItem = {...old, important: !old.important},
+                  newArr = [...data.slice(0, index), newItem, ...data.slice(index + 1)]
+            
+            return {
+                data: newArr
+            }
+        })
+    }
+
+    toggleLike = (id) => {
+        this.setState(({data}) => {
+            const index = data.findIndex(element => element.id === id),
+                  old = data[index],
+                  newItem = {...old, like: !old.like},
+                  newArr = [...data.slice(0, index), newItem, ...data.slice(index + 1)]
+            
+            return {
+                data: newArr
+            }
+        })
+    }
+    
+
+
+    deleteItem = (id) => {
         this.setState(({data}) => {
             const index = data.findIndex(element => element.id === id)
             const newArr = [...data.slice(0, index), ...data.slice(index + 1)]
@@ -38,18 +70,78 @@ export default class App extends Component{
         })
     }
 
+    addItem = (body) => {
+        const item = {
+            label: body,
+            important: false, 
+            id: this.maxId++,
+            like: false
+        }
+        
+        this.setState(({data}) => {
+            const newArr = [...data, item]
+
+            return {
+                data: newArr
+            }
+        })        
+    }
+    searchPost = (items, term) => {
+        if (term.length === 0){
+            return items
+        } 
+        return items.filter(item => item.label.indexOf(term) > -1)
+    }
+
+    changeTerm = (term) => {
+        this.setState({term})
+    }
+
+    filterPost = (items, filter) => {
+        if (filter === 'like'){
+            return items.filter(item => item.like)
+        } else {
+            return items
+        }
+    }
+
+
+    onFilter = (filter) => {
+        this.setState({filter})
+    }
+
+
     render() { 
+        const {data, term, filter} = this.state
+
+        const liked = this.state.data.filter(item => item.like).length
+        const allPosts = this.state.data.length
+        
+        const vivsiblePosts = this.filterPost((this.searchPost(data, term)), filter)                
+        
         return (
             <AppBlock>
-            <AppHeader />
+            <AppHeader
+            liked = {liked}
+            allPosts = {allPosts}
+             />
             <div className = "search-panel d-flex ">
-                <SearchPanel />
-                <PostStatusFiler />
+                <SearchPanel 
+                    onChangeTerm = {this.changeTerm}
+                />
+                <PostStatusFilter 
+                onFilter = {this.onFilter}
+                filter = {filter}/>
             </div>
             <PostList 
-                posts = {this.state.data}
-                toDelete = {this.deleteItem} />
-            <PostAddForm />
+                posts = {vivsiblePosts}
+                onToggleImportant = {this.toggleImportant}
+                onToggleLiked = {this.toggleLike}
+                onDelete = {this.deleteItem} />
+            <PostAddForm
+            
+            onAdd = {this.addItem}
+             />
             </AppBlock>
         )
         
