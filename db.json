@@ -1,0 +1,22 @@
+{
+  "data": [
+    {
+      "label": "test",
+      "important": true,
+      "id": 1,
+      "like": true
+    },
+    {
+      "label": "test1",
+      "important": false,
+      "id": 2,
+      "like": false
+    },
+    {
+      "label": "test2",
+      "important": false,
+      "id": 3,
+      "like": false
+    }
+  ]
+}
