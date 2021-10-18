@@ -11,7 +11,6 @@ export default class PostStatusFiler extends Component{
 
 
     render() {
-
         const btns = this.btns.map(({name, label}) => {
             const active = this.props.filter === name
             const btnColor = active ? 'info' : 'secondary'

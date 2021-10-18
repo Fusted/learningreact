@@ -20,17 +20,14 @@ export default class App extends Component{
     constructor (props) {
         super(props)
         this.state = {
-            data: [
-                {label: 'test', important: true, id: 1, like: true},
-                {label: 'test1', important: false, id: 2, like: false},
-                {label: 'test2', important: false, id: 3, like: false}
-            ],
+            data: [],
             term: '',
             filter: 'all'
         }   
         this.maxId = 4
+        this.isWork = false
     }
-   
+
 
     toggleImportant = (id) => {
         this.setState(({data}) => {
@@ -110,8 +107,27 @@ export default class App extends Component{
         this.setState({filter})
     }
 
+    getData = () => {  
+        return(
+            fetch('http://localhost:3000/data')
+            .then(resp => resp.json())
+            .catch(er => [{label: 'test', important: true, id: 1, like: true}])
+        )
+    }
+
+    componentDidMount() {
+        fetch('http://localhost:3000/data')
+        .then(resp => resp.json())
+        .then(ans => {
+            this.setState({
+                data: ans
+            })
+        })
+    }
 
     render() { 
+        
+
         const {data, term, filter} = this.state
 
         const liked = this.state.data.filter(item => item.like).length
@@ -149,3 +165,8 @@ export default class App extends Component{
 
 }
 
+/*
+{label: 'test', important: true, id: 1, like: true},
+{label: 'test1', important: false, id: 2, like: false},
+{label: 'test2', important: false, id: 3, like: false}
+*/
