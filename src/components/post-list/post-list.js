@@ -9,7 +9,7 @@ const PostList = ({posts, onDelete, onToggleImportant, onToggleLiked}) => {
         const {id, ...itemProps} = item
 
         return (
-            <li key = {id} className = 'list-group-item'>
+            <li key = {id + item.label} className = 'list-group-item'>
                 <PostListItem 
                 {...itemProps}
                 onDelete = {() => {onDelete(id)}}

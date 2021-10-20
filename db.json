@@ -1,22 +1,25 @@
 {
   "data": [
     {
-      "label": "test",
-      "important": true,
-      "id": 1,
-      "like": true
-    },
-    {
-      "label": "test1",
+      "label": "привет ",
       "important": false,
-      "id": 2,
+      "id": "4привет ",
       "like": false
     },
     {
-      "label": "test2",
+      "label": "hello world",
       "important": false,
-      "id": 3,
+      "id": "5hello world",
+      "like": false
+    },
+    {
+      "label": "it works!",
+      "important": false,
+      "id": "6it works!",
       "like": false
     }
-  ]
+  ],
+  "fakeData": {
+    "name": "noName"
+  }
 }

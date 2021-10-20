@@ -24,7 +24,7 @@ export default class App extends Component{
             term: '',
             filter: 'all'
         }   
-        this.maxId = 4
+        this.maxId = 0
         this.isWork = false
     }
 
@@ -59,21 +59,25 @@ export default class App extends Component{
 
     deleteItem = (id) => {
         this.setState(({data}) => {
-            const index = data.findIndex(element => element.id === id)
-            const newArr = [...data.slice(0, index), ...data.slice(index + 1)]
+ 
+            this.deleteData(id)
+
             return {
-                data: newArr
+                data: data.filter((item,index) => item.id !== id)
             }
         })
     }
-
+   
     addItem = (body) => {
         const item = {
             label: body,
             important: false, 
-            id: this.maxId++,
+            id: `${this.maxId++}${body}`,
             like: false
         }
+
+
+        this.sendData(item)
         
         this.setState(({data}) => {
             const newArr = [...data, item]
@@ -109,16 +113,61 @@ export default class App extends Component{
 
     getData = () => {  
         return(
-            fetch('http://localhost:3000/data')
+            fetch('http://localhost:3000/data' )
             .then(resp => resp.json())
             .catch(er => [{label: 'test', important: true, id: 1, like: true}])
         )
     }
 
+
+    deleteData = (id) => {
+        
+        fetch('http://localhost:3000/data/' + id, {
+            method: "delete",
+            headers: { "Content-Type": "application/json" },
+           
+        })
+        .then(resp => {
+            if (resp.status === 200) {
+                return resp.json()
+            } else {
+               // console.log("Status: " + resp.status)
+                return Promise.reject("server")
+            }
+        })
+        .catch(err => {
+            if (err === "server") return
+            console.log(err)
+        }) 
+    }
+
+    sendData = (item) => {
+        console.log(item)
+        fetch('http://localhost:3000/data', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(item)
+        })
+        .then(resp => {
+            if (resp.status === 200) {
+                return resp.json()
+            } else {
+                console.log("Status: " + resp.status)
+                return Promise.reject("server")
+            }
+        })
+        .catch(err => {
+            if (err === "server") return
+            console.log(err)
+        })
+    }
+
+
     componentDidMount() {
         fetch('http://localhost:3000/data')
         .then(resp => resp.json())
         .then(ans => {
+            this.maxId = ans.length + 1
             this.setState({
                 data: ans
             })
