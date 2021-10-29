@@ -15,3 +15,6 @@ In the project directory, you can run:
 Runs the app in the development mode.\
 Open [http://localhost:3001](http://localhost:3001) to view it in the browser.
 
+
+In this app you can add or delete posts. Posts are kept in db.json. 
+You can use search and filters
