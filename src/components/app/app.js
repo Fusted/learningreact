@@ -13,7 +13,7 @@ import './app.css'
 
 const AppBlock = styled.div`
     margin: 0 auto;
-    max-width: 800px;
+    max-width: min(800px, 80vw);
 `
 
 export default class App extends Component{
